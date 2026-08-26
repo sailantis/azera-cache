@@ -1,0 +1,40 @@
+{
+    "name": "sailantis/azera-cache",
+    "description": "Cache companion for the Azera framework: production-grade PSR-16 backends (Redis, File, APCu, Memcached, Memory) and decorators (Chain, Taggable, Namespace, Memoizing).",
+    "type": "library",
+    "repositories": [
+        { "type": "path", "url": "../azera-framework" },
+        { "type": "path", "url": "../clarity-engine" }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "sailantis/azera-framework": "dev-main",
+        "psr/simple-cache": "3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "suggest": {
+        "ext-apcu": "For ApcuCache backend.",
+        "ext-memcached": "For MemcachedCache backend (requires a running memcached server).",
+        "ext-memcache": "For MemcacheCache backend, the legacy ext-memcache adapter (requires a running memcached server).",
+        "ext-redis": "For RedisCache backend (requires a running Redis server)."
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Azera\\Cache\\Backend\\": "src/Backend/",
+            "Azera\\Cache\\Decorator\\": "src/Decorator/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Azera\\Cache\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
