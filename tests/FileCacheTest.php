@@ -33,6 +33,16 @@ final class FileCacheTest extends TestCase
         self::assertTrue($cache->has('hello'));
     }
 
+    public function test_overwrite_existing_key(): void
+    {
+        $cache = new FileCache($this->dir);
+
+        $cache->set('hello', 'first');
+        $cache->set('hello', 'second'); // rename() must overwrite on Windows
+
+        self::assertSame('second', $cache->get('hello'));
+    }
+
     public function test_miss_returns_default(): void
     {
         $cache = new FileCache($this->dir);

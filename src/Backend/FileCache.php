@@ -7,7 +7,6 @@ namespace Azera\Cache\Backend;
 use Azera\Cache\InvalidArgumentException;
 use DateInterval;
 use Psr\SimpleCache\CacheInterface;
-use Psr\SimpleCache\CacheException;
 
 /**
  * File-based PSR-16 cache.
@@ -79,17 +78,24 @@ class FileCache implements CacheInterface
         // Atomic write: tempnam in the same dir + rename.
         $tmp = @tempnam($dir, 'azera_');
         if ($tmp === false) {
-            throw new CacheException(sprintf('Cannot create temporary file in %s.', $dir));
+            throw new InvalidArgumentException(sprintf('Cannot create temporary file in %s.', $dir));
         }
 
         if (@file_put_contents($tmp, $payload) === false) {
             @unlink($tmp);
-            throw new CacheException(sprintf('Cannot write cache file %s.', $path));
+            throw new InvalidArgumentException(sprintf('Cannot write cache file %s.', $path));
+        }
+
+        // Windows rename() does not overwrite an existing destination, so an
+        // overwrite must remove the stale entry first (the @-suppressed
+        // unlink is a no-op when the file does not exist).
+        if (is_file($path)) {
+            @unlink($path);
         }
 
         if (!@rename($tmp, $path)) {
             @unlink($tmp);
-            throw new CacheException(sprintf('Cannot move cache file to %s.', $path));
+            throw new InvalidArgumentException(sprintf('Cannot move cache file to %s.', $path));
         }
 
         return true;

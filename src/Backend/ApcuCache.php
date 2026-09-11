@@ -15,15 +15,17 @@ use Psr\SimpleCache\CacheInterface;
  * so they survive across requests within the same shared cache. TTLs map
  * to APCu's native expiry.
  *
- * Note: APCu provides shared memory shared by all PHP processes on the
- * host (FPM workers, CLI workers sharing the same cache). It is *not*
- * suitable for multi-server setups — use
+ * Note: APCu's memory is shared per SAPI instance, not host-wide. All
+ * worker processes forked from a single SAPI master (one FPM pool, or
+ * mod_php's Apache parent) share one segment, while each separate master
+ * — and every CLI process — gets an isolated segment of its own. It is
+ * *not* suitable for multi-server setups — use
  * {@see \Azera\Cache\Backend\RedisCache} or
- * {@see \Azera\Cache\Backend\MemcachedCache} for that. On a single host
- * it is the fastest persistent backend available.
+ * {@see \Azera\Cache\Backend\MemcachedCache} for that. Within a single
+ * SAPI segment it is the fastest persistent backend available.
  *
  * A key prefix is applied to avoid colliding with unrelated APCu entries
- * owned by other libraries on the same host.
+ * owned by other libraries sharing the same segment.
  */
 class ApcuCache implements CacheInterface
 {
