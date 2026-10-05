@@ -15,11 +15,11 @@ use Psr\SimpleCache\CacheInterface;
  * under a reserved prefix, so no extra storage is required.
  *
  * Example:
- * <code>
+ * ```php
  * $cache = new TaggableCache($redis);
  * $cache->set('user.42', $user, tags: ['users', 'tenant_5']);
  * $cache->invalidateTag('users'); // evicts 'user.42' and every other tagged key
- * </code>
+ * ```
  */
 class TaggableCache implements CacheInterface
 {

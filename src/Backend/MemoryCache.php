@@ -18,12 +18,12 @@ use Psr\SimpleCache\CacheInterface;
  * the heap without bound.
  *
  * Use as the fastest layer in a {@see \Azera\Cache\Decorator\ChainCache}:
- * <code>
+ * ```php
  * $cache = new ChainCache([
  *     new MemoryCache(maxEntries: 5000),
  *     new \Azera\Cache\Backend\RedisCache($redis),
  * ]);
- * </code>
+ * ```
  */
 class MemoryCache implements CacheInterface
 {
